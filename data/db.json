@@ -1,0 +1,29 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "checked": true,
+      "text": "Learn JavaScript"
+    },
+    {
+      "id": 2,
+      "checked": false,
+      "text": "Build a To-Do App"
+    },
+    {
+      "id": 3,
+      "checked": true,
+      "text": "Read about React"
+    },
+    {
+      "id": 4,
+      "checked": false,
+      "text": "Practice coding daily"
+    },
+    {
+      "id": 5,
+      "checked": false,
+      "text": "Contribute to open source"
+    }
+  ]
+}
