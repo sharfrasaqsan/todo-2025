@@ -4,6 +4,7 @@ import Footer from "./components/Footer";
 import Content from "./components/Content";
 import AddItem from "./components/AddItem";
 import SearchItem from "./components/SearchItem";
+import apiRequest from "./components/apiRequest";
 import "./App.css";
 
 function App() {
@@ -34,31 +35,59 @@ function App() {
     }, 2000);
   }, []);
 
-  const addItems = (i) => {
-    const id = items.length ? items[items.length - 1].id + 1 : 1;
-    const listItems = { id, checked: false, text: i };
-    const addNewItems = [...items, listItems];
-    setItems(addNewItems);
-    localStorage.setItem("todo", JSON.stringify(addNewItems));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!addItem) return;
-    addItems(addItem);
+    const id = items.length ? items[items.length - 1].id + 1 : 1;
+    const newItem = { id, checked: false, text: addItem };
+    const addNewItem = [...items, newItem];
+    setItems(addNewItem);
     setAddItem("");
+
+    const postOption = {
+      method: "POST",
+      headers: {
+        "Contet-Type": "application/json",
+      },
+      body: JSON.stringify(newItem),
+    };
+
+    const result = await apiRequest(API_URL, postOption);
+    if (result) throw setFetchError(result);
   };
 
-  const handleChange = (id) => {
+  const handleChange = async (id) => {
     const listItems = items.map((i) =>
       i.id === id ? { ...i, checked: !i.checked } : i
     );
     setItems(listItems);
+
+    const myItem = listItems.filter((i) => i.id === id);
+
+    const updateOption = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ checked: myItem[0].checked }),
+    };
+
+    const reqURL = `${API_URL}/${id}`;
+    const result = await apiRequest(reqURL, updateOption);
+    if (result) throw setFetchError(result);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     const listItems = items.filter((i) => i.id !== id);
     setItems(listItems);
+
+    const deleteOption = {
+      method: "DELETE",
+    };
+
+    const reqURL = `${API_URL}/${id}`;
+    const result = await apiRequest(reqURL, deleteOption);
+    if (result) throw setFetchError(result);
   };
 
   return (
